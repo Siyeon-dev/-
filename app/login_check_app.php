@@ -11,9 +11,12 @@
         echo "Failed to connect to MySQL" . mysqli_connect_error();
     // 연결 성공시 Database에서 일치하는 data가 있는지 확인
     } else {
+      header("Content-Type: application/json; charset=UTF-8");
+      $json = file_get_contents('php://input');
+      $decoded_json = json_decode($json, true);
 
-      $user_id = $_POST['userID'];
-      $user_pw = $_POST['userDevice'];
+      $user_id = $decoded_json['userID'];
+      $user_pw = $decoded_json['userDevice'];
 
       $query_mobile_value = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device = '$user_pw'");
       $rows_mobile = mysqli_num_rows($query_mobile_value);
@@ -46,7 +49,7 @@
 
       } else {
         $flag_std = false;
-	 $flag_array = array("name"=>'로그인정보가없습니다.');
+	 $flag_array = array("name"=>false);
         $encoded_json = json_encode($flag_array);
         print_r($encoded_json);
       }
