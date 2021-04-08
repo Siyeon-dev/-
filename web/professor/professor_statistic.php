@@ -134,9 +134,9 @@ if (mysqli_connect_errno()) {
       }
       if ($data['state_early']    == 1) {
         $early++;
-        $pureAttend--;
+     //   $pureAttend--;
 
-        $earlyIsReduced = true;
+     //   $earlyIsReduced = true;
       }
 
      //if ($lateIsReduced == true && $earlyIsReduced == true) {

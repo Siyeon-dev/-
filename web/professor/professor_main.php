@@ -108,7 +108,9 @@ if (mysqli_connect_errno()) {
 
     // <!-- 학생별 출지결 데이터를 담을 배열 동적할당
     array_push($dataSource['dataset'], array(
-      "data" => array()
+      "data" => array(),
+      "start_time" => array(),
+      "end_time" => array()
     ));
 
     $tmpData = array(); // 해당 학생의 1일 ~ x일 까지의 출지결 정보를 담을 배열
@@ -118,6 +120,11 @@ if (mysqli_connect_errno()) {
 
     // <!--  해당 학생의 state에 맞는 데이터를 $tmpData에 저장
     while ($data = mysqli_fetch_assoc($querySearchData)) {
+      
+      array_push($dataSource['dataset'][$iCount]['start_time'], $data['in_time']);
+      array_push($dataSource['dataset'][$iCount]['end_time'], $data['out_time']);
+      
+
       if ($data['state_late']     == 1) {
         array_push($dataSource['dataset'][$iCount]['data'], "1");
         continue;
