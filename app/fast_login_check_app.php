@@ -34,11 +34,15 @@ $today = date('Y-m-d');
 $tommorow = date('Y-m-d', strtotime("+1 day", strtotime($today)));
 $row = mysqli_fetch_assoc($query_mobile);
 
-$query_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE std_num = '$row[std_num]' AND created BETWEEN '$today' AND '$tomorrow'");
+$query_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE std_num = '$row[std_num]' AND created BETWEEN '$today' AND '$tommorow'");
 $data = mysqli_fetch_assoc($query_time);
-   
  // 프론트에게 JSON 형식으로 로그인 시도에 대한 결과값 배열 전달.
-    $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time']);
+ 
+   if ($data['out_time'] == '00:00:00') {
+     $data['out_time'] = null;
+   }
+
+   $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time']);
     $encoded_json = json_encode($flag_array);
     print_r($encoded_json);
 

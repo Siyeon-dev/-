@@ -31,11 +31,11 @@ if (mysqli_connect_errno()) {
         $query = mysqli_query($conn, "SELECT * FROM student_inf WHERE std_num ='$iCount'");
         $std_num = mysqli_fetch_array($query);
         echo $std_num['std_num'];
-        for ($day = 1; $day < 26; $day++) {
+        for ($day = 1; $day < 8; $day++) {
 
             mysqli_query($conn, "INSERT INTO attendance_inf (std_num) VALUES ('$std_num[std_num]')");
-            mysqli_query($conn, "UPDATE attendance_inf SET created ='2020-10-{$day} 00:00:00' WHERE created
-                                                BETWEEN '2020-10-25' AND '2020-10-26' AND std_num = '{$iCount}'");
+            mysqli_query($conn, "UPDATE attendance_inf SET created ='2021-04-{$day} 00:00:00' WHERE created
+                                                BETWEEN '2021-04-08' AND '2021-04-09' AND std_num = '{$iCount}'");
         }
     }
 }
