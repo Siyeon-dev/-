@@ -43,10 +43,9 @@ if (mysqli_connect_errno()) {
     $getDate1 = $month . "-01";          // 이번 달 시작 (y-m-d) 포맷으로 가공
     //$getDate2 = $month."-".$getDate2;  // 이번 달 끝   (y-m-d) 포맷으로 가공
     $getDate2 = date("Y-m-d");
-    $getDate2 = strtotime($getDate2 . '+1 days');
+    $getDate2 = strtotime($getDate2);
     $getDate2 = date('y-m-d', $getDate2);
   }
- 
   // -->
   // 데이터를 저장할 배열 선언
   $dataSource = array(

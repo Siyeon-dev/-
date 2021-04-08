@@ -17,12 +17,24 @@
 
       $user_id = $decoded_json['userID'];
       $user_pw = $decoded_json['userDevice'];
-
-      $query_mobile_value = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device = '$user_pw'");
+      $query_mobile_value = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device ='$user_pw'");
       $rows_mobile = mysqli_num_rows($query_mobile_value);
+      
+      $query_std  = mysqli_query($conn, "SELECT * FROM student_inf
+      WHERE std_num = '$user_id'");
+      $rows_std = mysqli_fetch_assoc($query_std);
 
       if ($rows_mobile == 0) {
-	mysqli_query($conn, "UPDATE student_inf SET mobild_device ='$user_pw' WHERE std_num='$user_id'");
+
+        if ($rows_std['mobild_device'] == '') { 
+	    mysqli_query($conn, "UPDATE student_inf SET mobild_device ='$user_pw' WHERE std_num='$user_id'");
+        } else {
+          $flag_std = false;
+          $flag_array = array("std_name"=>false);
+          $encoded_json = json_encode($flag_array);
+          print_r($encoded_json);
+	  exit();
+        }           
       }
 
       //학생용 table 접근 query문 $query_std
@@ -43,13 +55,13 @@
         $in_time = $userData['in_time'];
         $out_time = $userData['out_time'];
       
-        $flag_array = array("in_time"=>$in_time,"out_time"=>$out_time ,"name"=>$rows_name['std_name']);
+        $flag_array = array("in_time"=>$in_time,"out_time"=>$out_time ,"std_name"=>$rows_name['std_name']);
         $encoded_json = json_encode($flag_array);
         print_r($encoded_json);
 
       } else {
         $flag_std = false;
-	 $flag_array = array("name"=>false);
+	 $flag_array = array("std_name"=>false);
         $encoded_json = json_encode($flag_array);
         print_r($encoded_json);
       }
