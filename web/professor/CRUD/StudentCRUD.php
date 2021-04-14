@@ -59,6 +59,7 @@ if (mysqli_connect_errno()) {
          // Delete
         case 3:
             $deleteStudent = mysqli_query($conn, "DELETE FROM student_inf WHERE std_name = '$delStduent'");
+            $deleteStudent = mysqli_query($conn, "DELETE FROM attendance_inf WHERE std_num = '$delStduent'");
             break;
     }
 

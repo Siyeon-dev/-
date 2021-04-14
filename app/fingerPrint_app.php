@@ -1,4 +1,22 @@
 <?php
+
+$ip = $_SERVER['REMOTE_ADDR'];
+
+$accessibleIP = ['210.101.247.3', '210.101.247.1', '210.101.247.125', '110.35.222.149'];
+
+$status = false;
+
+foreach ($accessibleIP as $value) {
+  if ($value == $ip) {
+    $status = true;
+  }
+}
+
+if ($status === false) {
+  $json = json_encode(["access"=>false]);
+  print_r($json);
+  exit();
+} else {
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
@@ -76,10 +94,6 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
       $resultTimeInf = mysqli_fetch_assoc($querySearchInTime);  // 연관 배열
       $resultDataExist = mysqli_num_rows($querySearchInTime);   // 데이터가 존재하는지 확인
       // -->
-      // 입퇴실 기록이 모두 있으면, Respond 값 안주기 
-      if ($resultTimeInf['in_time'] != '' && $resultTimeInf['out_time'] != '00:00:00') {
-         exit();
-      }
 
       // <!-- 오늘 날짜가 공휴일로 지정되어 있는지 확인
       // 국가지정 공휴일이거나, 교수님에 의해 지정된 공휴일 확인
@@ -144,9 +158,21 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
       $resultTimeInf['out_time'] = null;
     } 
 
+  
+    $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $resultTimeInf[idx]");
+$outGoingDataArray = array();
+    while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
+        array_push($outGoingDataArray, array(
+            "in_time" => $data['in_time'],
+            "out_time" => $data['out_time'],
+            "reason" => $data['reason']
+        ));
+    }
+
+    
       // 데이터 전송
-      $json = json_encode(["std_name"=> $userName, "in_time"=> $resultTimeInf['in_time'],"out_time"=>$resultTimeInf['out_time']]);
+      $json = json_encode(["std_name"=> $userName, "in_time"=> $resultTimeInf['in_time'],"out_time"=>$resultTimeInf['out_time'], "out_list"=>$outGoingDataArray]);
       print_r($json);
     }
+}
 ?>
-
