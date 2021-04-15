@@ -4,8 +4,7 @@ $ip = $_SERVER['REMOTE_ADDR'];
 
 $accessibleIP = ['210.101.247.3', '210.101.247.1', '210.101.247.125', '110.35.222.149'];
 
-$status = true;
-// $status = false; /////////////이 부분 실제 서비스에서는 바꿔야 함/////////
+$status = false; /////////////이 부분 실제 서비스에서는 바꿔야 함/////////
 foreach ($accessibleIP as $value) {
   if ($value == $ip) {
     $status = true;
