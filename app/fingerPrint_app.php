@@ -162,6 +162,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
     $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $resultTimeInf[idx]");
 $outGoingDataArray = array();
     while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
+ 	if ($data['out_time'] == '00:00:00')
+                $data['out_time'] = null;
         array_push($outGoingDataArray, array(
             "in_time" => $data['in_time'],
             "out_time" => $data['out_time'],

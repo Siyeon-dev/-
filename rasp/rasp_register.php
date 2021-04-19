@@ -22,7 +22,7 @@
 
       // <!--해당 학생의 row에 primaryKEY 값 있는지 확인하는 query
       $querySearchKEY  = mysqli_query($conn, "SELECT * FROM student_inf
-      WHERE std_num = '{$user_id}' AND serial_num ='null'");
+      WHERE std_num = '{$user_id}' AND serial_num =''");
       $flag_query = mysqli_num_rows($querySearchKEY);  // primaryKEY 값이 존재하지 않는다면, 1이 저장된다. (등록 가능한 상황)
       // --!>
 

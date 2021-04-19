@@ -17,6 +17,7 @@
 
       $user_id = $decoded_json['userID'];
       $user_pw = $decoded_json['userDevice'];
+      
       $query_mobile_value = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device ='$user_pw'");
       $rows_mobile = mysqli_num_rows($query_mobile_value);
       
@@ -48,14 +49,36 @@
       
       if ($rows_std == 1) {
         $flag_std = true;
-        $dayTime    = date("y-m-d");        
-        $query_std_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE created = '$dayTime' AND std_num = '$user_id'");
+	
+	$timestamp  = strtotime("+1 days");
+    	$today    = date("y-m-d");
+    	$tomorrow   = date("y-m-d", $timestamp);
+
+        $query_std_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE std_num = '$user_id' AND created BETWEEN '$today' AND '$tomorrow'");
         $userData = mysqli_fetch_assoc($query_std_time);
 
         $in_time = $userData['in_time'];
         $out_time = $userData['out_time'];
+
+	if ($out_time == '00:00:00')
+		$out_time = null;
+
+	$outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userData[idx]");
+    
+    	$outGoingDataArray = array();
+   	 while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
+        	if($data['out_time'] == '00:00:00')
+			$data['out_time'] = null;
+
+		array_push($outGoingDataArray, array(
+        	    	"in_time" => $data['in_time'],
+            		"out_time" => $data['out_time'],
+            		"reason" => $data['reason']
+       	 	));
+    	}
+
       
-        $flag_array = array("in_time"=>$in_time,"out_time"=>$out_time ,"std_name"=>$rows_name['std_name']);
+        $flag_array = array("in_time"=>$in_time,"out_time"=>$out_time ,"std_name"=>$rows_name['std_name'], "out_list"=>$outGoingDataArray);
         $encoded_json = json_encode($flag_array);
         print_r($encoded_json);
 

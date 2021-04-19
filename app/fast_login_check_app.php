@@ -37,12 +37,29 @@ $row = mysqli_fetch_assoc($query_mobile);
 $query_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE std_num = '$row[std_num]' AND created BETWEEN '$today' AND '$tommorow'");
 $data = mysqli_fetch_assoc($query_time);
  // 프론트에게 JSON 형식으로 로그인 시도에 대한 결과값 배열 전달.
+
+
  
    if ($data['out_time'] == '00:00:00') {
      $data['out_time'] = null;
    }
 
-   $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time']);
+        $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $data[idx]");
+
+        $outGoingDataArray = array();
+         while ($datas = mysqli_fetch_assoc($outGoingDatasQuery)) {
+                if($datas['out_time'] == '00:00:00')
+                        $datas['out_time'] = null;
+
+                array_push($outGoingDataArray, array(
+                        "in_time" => $datas['in_time'],
+                        "out_time" => $datas['out_time'],
+                        "reason" => $datas['reason']
+                ));
+        }
+
+
+   $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time'], "out_list"=>$outGoingDataArray);
     $encoded_json = json_encode($flag_array);
     print_r($encoded_json);
 

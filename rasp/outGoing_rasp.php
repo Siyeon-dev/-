@@ -22,15 +22,15 @@ if (mysqli_connect_errno()) {
     $decoded_json = json_decode($json, true);   // JSON 포맷을 Parsing 한다.
 
     // decoded 된 json 데이터에서 사용자의 id(input_user_id)와 pw(input_user_pw)를 가져온다.
-    $userDevice = $decoded_json['userDevice'];      // email    - 학번
-    $reason = $decoded_json['reason'];
+    $userDevice = $_POST['primaryKEY'];      // email    - 학번
+    $reason = $_POST['reason'];
 
     $timestamp  = strtotime("+1 days");
     $today    = date("y-m-d");
     $tomorrow   = date("y-m-d", $timestamp);
 
     $userQuery = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE 
-    std_num IN (SELECT std_num FROM student_inf WHERE mobild_device = '$userDevice') AND
+    std_num = '$userDevice'  AND
     created BETWEEN '$today' AND '$tomorrow'");
 
     $userQueryResult = mysqli_fetch_assoc($userQuery);
@@ -57,26 +57,15 @@ if (mysqli_connect_errno()) {
         $updateDataQuery = mysqli_query($conn, "UPDATE outgo_inf SET out_time = '$nowTime', outgoing_time = '$outGoingTime' WHERE idx = $outGoingResult[idx]");
     }
     
-    $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userQueryResult[idx]");
+    $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userQueryResult[idx] ORDER BY idx DESC limit 1");
+    $data = mysqli_fetch_assoc($outGoingDatasQuery);
     
-    $outGoingDataArray = array();
-    while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
-     	if ($data['out_time'] == '00:00:00')
-                $data['out_time'] = null;
-	 array_push($outGoingDataArray, array(
-            "in_time" => $data['in_time'],
-            "out_time" => $data['out_time'],
-            "reason" => $data['reason']
-        ));
-    }
-
-    $nameQuery = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device = '$userDevice'");
+    $nameQuery = mysqli_query($conn, "SELECT * FROM student_inf WHERE std_num = '$userDevice'");
     $name = mysqli_fetch_assoc($nameQuery);
     
-    if ($userQueryResult['out_time'] == '00:00:00')
-	$userQueryResult['out_time'] = null; 
+    
     // 데이터 전송
-    $json = json_encode(["std_name"=> $name['std_name'], "in_time"=> $userQueryResult['in_time'],"out_time"=>$userQueryResult['out_time'], "out_list"=>$outGoingDataArray]);
+    $json = json_encode(["std_name"=> $name['std_name'], "in_time"=> $data['in_time'],"out_time"=>$data['out_time'], "reason"=>$data['reason'], "outgoing_time"=>$data['outgoing_time']]);
     print_r($json);
 }
 

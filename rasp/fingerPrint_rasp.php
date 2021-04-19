@@ -15,7 +15,7 @@
       // 출석인지 하교인지를 알 수 있는 tab 값을 받아온다.
       $valueKey = $_POST['primaryKEY'];
       $tabState = $_POST['tab'];
-
+      
       /************************************************************/
       // 교수님으로부터 특정 날짜에 대한 등,하교 값을 저장하는 TABLE을 생성하고
       // x날에 해당 TABLE 변경된 등하교 값이 있다면, 그 시간으로 지정
@@ -25,7 +25,7 @@
       // <!-- 해당 primaryKEY값을 가지고 있는 학생 검색
       if($valueKey != null) {
           $querySearchSTD = mysqli_query($conn, "SELECT * FROM student_inf
-          WHERE serial_num = '$valueKey'");
+          WHERE std_num = $valueKey");
           $userData = mysqli_fetch_assoc($querySearchSTD);
       }
       // -->

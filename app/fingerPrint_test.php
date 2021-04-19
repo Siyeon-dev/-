@@ -2,7 +2,7 @@
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
-$accessibleIP = ['210.101.247.3', '210.101.247.1', '210.101.247.125', '110.35.222.149'];
+$accessibleIP = ['210.101.247.3', '210.101.247.1', '110.35.222.149'];
 
 $status = false; /////////////이 부분 실제 서비스에서는 바꿔야 함/////////
 foreach ($accessibleIP as $value) {
@@ -161,7 +161,9 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
     $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $resultTimeInf[idx]");
 $outGoingDataArray = array();
     while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
-        array_push($outGoingDataArray, array(
+      	if ($data['out_time'] == '00:00:00')
+		$data['out_time'] = null;
+	  array_push($outGoingDataArray, array(
             "in_time" => $data['in_time'],
             "out_time" => $data['out_time'],
             "reason" => $data['reason']
