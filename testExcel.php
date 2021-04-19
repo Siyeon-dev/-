@@ -55,12 +55,17 @@
 
           for ($i = 1 ; $i <= $maxRow ; $i++) {
 
-                     $name = $objWorksheet->getCell('A' . $i)->getValue(); // A열
-                     $num = $objWorksheet->getCell('B' . $i)->getValue(); // B열
+                     $name = $objWorksheet->getCell('B' . $i)->getValue(); // A열
+                     $num = $objWorksheet->getCell('A' . $i)->getValue(); // B열
                      array_push($array["excel"], array($name, $num));
-                     $queryInsertInf = mysqli_query($conn, "INSERT INTO student_inf (std_num, std_name, std_password)
-                     VALUES ('$num', '$name', '1234')");
-          }
+                     //$queryInsertInf = mysqli_query($conn, "INSERT INTO student_inf (std_num, std_name, std_password) VALUES ('$num', '$name', '1234')");
+        
+		 $queryStdNum = mysqli_query($conn, "SELECT * FROM student_inf WHERE std_name ='$name'");
+                $queryStdNums = mysqli_fetch_array($queryStdNum);
+                $queryUpdateInf = mysqli_query($conn, "UPDATE attendance_inf SET std_num = $num WHERE std_num = $queryStdNums[std_num]");
+	
+		$queryInsertInf = mysqli_query($conn, "UPDATE student_inf SET std_num = $num WHERE std_name = '$name'");
+	}
 
       }
        catch (exception $e) {

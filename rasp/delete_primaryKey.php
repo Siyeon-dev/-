@@ -15,7 +15,7 @@
       $userData = $_POST['primaryKEY'];
 
       // 해당 유저의 시리얼 넘버의 값을 공백으로 변경하겠다.
-      $queryDeleteData  = mysqli_query($conn, "UPDATE student_inf SET serial_num = '' WHERE serial_num = '$userData'");
+      $queryDeleteData  = mysqli_query($conn, "UPDATE student_inf SET serial_num = '' WHERE std_num = '$userData'");
       // 해당 유저의 지문 값으로 찍혀있던 출석 정보를 삭제한다.
       $queryStudentInfo = mysqli_fetch_assoc($conn, "SELECT * FROM student_inf WHERE serial_num = '$userData'");
       mysqli_query($conn, "DELETE FROM attendance_inf WHERE std_num = '{$queryStudentInfo['std_num']}'");

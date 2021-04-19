@@ -43,22 +43,38 @@ if (mysqli_connect_errno()) {
 
         $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userQueryResult[idx]");
         
-        
+        $outgoingTime = null;
         
         $outGoingDataArray = array();
         while ($data = mysqli_fetch_assoc($outGoingDatasQuery)) {
+		if ($data['out_time'] == '00:00:00') {
+			$data['out_time'] = null;
+			$data['outgoing_time'] = null;
+		}    
+
             array_push($outGoingDataArray, array(
                 "in_time" => $data['in_time'],
                 "out_time" => $data['out_time'],
 		"outgoing_time" => $data['outgoing_time'],
                 "reason" => $data['reason']
             ));
+
+            if ($data['outgoing_time'] != null) {
+                $outgoingTime += strtotime($data['outgoing_time']);
+            }
+        }
+        
+        $all_outgoing_time = date("H:i:s", $outgoingTime);
+        
+        if ($outgoingTime == null) {
+            $all_outgoing_time = null;
         }
 
         array_push($students, array(
             "std_name" => $datas['std_name'],
             "in_time" => $userQueryResult['in_time'],
             "out_time" => $userQueryResult['out_time'],
+            "all_outgoing_time" => $all_outgoing_time,
             "out_list" => $outGoingDataArray
         ));
     }

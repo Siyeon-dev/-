@@ -46,6 +46,8 @@ $data = mysqli_fetch_assoc($query_time);
 
         $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $data[idx]");
 
+$outgoingTime = null;
+
         $outGoingDataArray = array();
          while ($datas = mysqli_fetch_assoc($outGoingDatasQuery)) {
                 if($datas['out_time'] == '00:00:00')
@@ -56,10 +58,19 @@ $data = mysqli_fetch_assoc($query_time);
                         "out_time" => $datas['out_time'],
                         "reason" => $datas['reason']
                 ));
+
+	    if ($datas['outgoing_time'] != null) {
+                $outgoingTime += strtotime($datas['outgoing_time']);
+            }
+        }
+	
+	 $all_outgoing_time = date("H:i:s", $outgoingTime);
+        
+        if ($outgoingTime == null) {
+            $all_outgoing_time = null;
         }
 
-
-   $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time'], "out_list"=>$outGoingDataArray);
+   $flag_array = array("flag_mobile"=>$flag_mobile, "std_name"=>$row['std_name'], "in_time"=>$data['in_time'], "out_time"=>$data['out_time'],"all_outgoing_time"=>$all_outgoing_time, "out_list"=>$outGoingDataArray);
     $encoded_json = json_encode($flag_array);
     print_r($encoded_json);
 

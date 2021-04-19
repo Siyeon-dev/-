@@ -27,15 +27,14 @@ if (mysqli_connect_errno()) {
     //DB 연결 성공
 } else {
     // 전체 학생에 대한
-    for ($iCount = 1; $iCount <= 31; $iCount++) {
+    for ($iCount = 1; $iCount <= 41; $iCount++) {
         $query = mysqli_query($conn, "SELECT * FROM student_inf WHERE std_num ='$iCount'");
         $std_num = mysqli_fetch_array($query);
         echo $std_num['std_num'];
-        for ($day = 1; $day < 8; $day++) {
+        for ($day = 1; $day < 19; $day++) {
 
             mysqli_query($conn, "INSERT INTO attendance_inf (std_num) VALUES ('$std_num[std_num]')");
-            mysqli_query($conn, "UPDATE attendance_inf SET created ='2021-04-{$day} 00:00:00' WHERE created
-                                                BETWEEN '2021-04-08' AND '2021-04-09' AND std_num = '{$iCount}'");
+            mysqli_query($conn, "UPDATE attendance_inf SET created ='2021-04-$day 00:00:00' WHERE created BETWEEN '2021-04-19' AND '2021-04-20' AND std_num = '{$iCount}'");
         }
     }
 }
