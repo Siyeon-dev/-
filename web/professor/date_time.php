@@ -23,10 +23,15 @@ if (mysqli_connect_errno()) {
 
   $tommorow = date('Y-m-d', strtotime("+1 day", strtotime($today)));
  
+  $timeInfQuery = mysqli_query($conn, "SELECT start_time, end_time FROM calendar_lunar_solar WHERE solar_date ='$today'");
+  $timeInf = mysqli_fetch_assoc($timeInfQuery);
+  $dayInf = date('w', strtotime($today));
 
 // 데이터를 저장할 배열 선언
   $dataSource = array(
-    "desserts" => array()
+    "desserts" => array(),
+    "times"=> [$timeInf['start_time'], $timeInf['end_time']],
+    "dayInf" => $dayInf,
   );
 
   //$iCount = 0;  // 각각의 desserts에 접근하기 위한 카운트
@@ -44,6 +49,12 @@ if (mysqli_connect_errno()) {
     $todayIntime   = $SearchTodayTime['in_time'];   // 오늘의 출근시간
     $todayOuttime  = $SearchTodayTime['out_time'];  // 오늘의 퇴근시간
     //********************************************************************************************************
+
+   if($todayIntime == '00:00:00')
+                $todayIntime = null;
+
+        if($todayOuttime == '00:00:00')
+                $todayOuttime = null;
 
     // <!-- 전체 데이터를 정리해서 $dataSource 배열에 저장한다.
     array_push($dataSource["desserts"], array(
