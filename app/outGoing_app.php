@@ -53,7 +53,7 @@ if (mysqli_connect_errno()) {
     if ($outGoingResult == null || $outGoingResult['outgoing_time'] != '00:00:00') {
         $insertDataQuery = mysqli_query($conn, "INSERT INTO outgo_inf (idx_attendance, reason, in_time) VALUES ($userQueryResult[idx], '$reason', '$nowTime')");
     } else {
-        $outGoingTime = date(strtotime($nowTime) - strtotime($outGoingResult['in_time']));
+        $outGoingTime = gmdate("H:i:s", strtotime($nowTime) - strtotime($outGoingResult['in_time']));
         $updateDataQuery = mysqli_query($conn, "UPDATE outgo_inf SET out_time = '$nowTime', outgoing_time = '$outGoingTime' WHERE idx = $outGoingResult[idx]");
     }
     

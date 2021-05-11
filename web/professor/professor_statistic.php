@@ -60,15 +60,14 @@ if (mysqli_connect_errno()) {
   $e = new DateTime($getDate2); // 종료일
   $d    = date_diff($s, $e);    // 시작일 - 종료일 : 일수
   $days = $d->days;             // 일수 값 저장
-
   $diffDays = $days;  // 쉬는 날을 제외 한 순수 날짜 수
-  
   // // //<!-- 이번 달의 첫 날부터 마지막 날까지
+
   for ($i = 0; $i <= $days - 1; $i++) {
 
     // 달력의 n번째 날짜를 DB 검색 후, 연관 배열로 저장
     $querySeachMonthInf = mysqli_query($conn, "SELECT * FROM calendar_lunar_solar 
-        WHERE solar_date BETWEEN '$getDate1' AND '$getDate2'");
+        WHERE solar_date BETWEEN $getDate1 AND $getDate2");
 
     $searchMonthInf = mysqli_fetch_assoc($querySeachMonthInf);
 
@@ -79,10 +78,11 @@ if (mysqli_connect_errno()) {
     $dateTs = strtotime($tempData1);
     $weekday = date("w", $dateTs);
     //-->
+
     // <!--  $dataSource['days'] 배열에 국가 공휴일이거나 주말이라면 1, 평일이라면 0을 넣는다.
-    if ($searchMonthInf['memo'] != NULL || $weekday == 6 || $weekday == 0) {
+    if ($searchMonthInf['memo'] != NULL|| $weekday == 6 || $weekday == 0) {
       $diffDays--;
-    }
+   }
   }
   // //-->
   //********************************************************************************************************
@@ -171,10 +171,10 @@ if (mysqli_connect_errno()) {
       // 시작일부터 종료일 중, 
       //쉬는 날을 제외 한 "등교 해야만 하는 날짜 수" / "총 등교한 수"
       if ($allAttend != 0) {
-        $absenceRate = round($absence / $diffDays * 100);
+       $absenceRate = round($absence / $diffDays * 100);
       } else {
-        $absenceRate = 100;
-      }
+        $absenceRate = 100;  
+    }
     }
     // -->
 

@@ -44,7 +44,7 @@ if (mysqli_connect_errno()) {
     }
 
     $nowTime = date("H:i:s");
-    
+    $outGoingTime = null;
 
     $outGoingQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userQueryResult[idx] ORDER BY idx DESC limit 1");
     $outGoingResult = mysqli_fetch_assoc($outGoingQuery);
@@ -53,8 +53,9 @@ if (mysqli_connect_errno()) {
     if ($outGoingResult == null || $outGoingResult['outgoing_time'] != '00:00:00') {
         $insertDataQuery = mysqli_query($conn, "INSERT INTO outgo_inf (idx_attendance, reason, in_time) VALUES ($userQueryResult[idx], '$reason', '$nowTime')");
     } else {
-        $outGoingTime = date(strtotime($nowTime) - strtotime($outGoingResult['in_time']));
-        $updateDataQuery = mysqli_query($conn, "UPDATE outgo_inf SET out_time = '$nowTime', outgoing_time = '$outGoingTime' WHERE idx = $outGoingResult[idx]");
+        $outGoingTime = strtotime($nowTime) - strtotime($outGoingResult['in_time']);
+	$time = gmdate("H:i:s", $outGoingTime);
+        $updateDataQuery = mysqli_query($conn, "UPDATE outgo_inf SET out_time = '$nowTime', outgoing_time = '$time' WHERE idx = $outGoingResult[idx]");
     }
     
     $outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userQueryResult[idx] ORDER BY idx DESC limit 1");

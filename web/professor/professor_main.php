@@ -93,6 +93,10 @@ if (mysqli_connect_errno()) {
   //전체 학생의 이름 리스트, 해당 학생별 1일부터 x일까지 출석 유무 데이터 확인///
   //////////////////////////////////////////////////////////////////////////
   $iCount = 0;  // 배열 인덱스 접근 변수
+  
+  if ($endMonthDay != 31) {
+	$endMonthDay += 1;
+  }  
 
   $inMonthDay = $month . "-1" . " ";           // 해당 월의 첫번째 날
   $outMonthDay = $month . '-' . $endMonthDay;   // 해당 월의 마지막 날

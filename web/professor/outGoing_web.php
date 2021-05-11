@@ -53,10 +53,10 @@ if (mysqli_connect_errno()) {
 		}    
 
             array_push($outGoingDataArray, array(
-                "in_time" => $data['in_time'],
-                "out_time" => $data['out_time'],
-		"outgoing_time" => $data['outgoing_time'],
-                "reason" => $data['reason']
+                "나간 시간" => $data['in_time'],
+                "들어온 시간" => $data['out_time'],
+		"총 부재시간" => $data['outgoing_time'],
+                "사유" => $data['reason']
             ));
 
             if ($data['outgoing_time'] != null) {

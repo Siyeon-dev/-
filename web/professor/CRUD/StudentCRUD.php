@@ -41,8 +41,8 @@ if (mysqli_connect_errno()) {
     switch ($switchType) {
         // Create
         case 0:
-            $createStudent = mysqli_query($conn, "INSERT INTO student_inf (std_num, std_name)
-                                        VALUES('$addStudent', '$addStudent')");
+            $createStudent = mysqli_query($conn, "INSERT INTO student_inf (std_num, std_name, serial_num)
+                                        VALUES('$addStudent', '$addStudent', '')");
             break;
         // Read
         case 1:

@@ -114,6 +114,12 @@ if (mysqli_connect_errno()) {
     $todayIntime   = $SearchTodayTime['in_time'];   // 오늘의 출근시간
     $todayOuttime  = $SearchTodayTime['out_time'];  // 오늘의 퇴근시간
     //********************************************************************************************************
+	if($todayIntime == '00:00:00')
+		$todayIntime = null;
+
+	if($todayOuttime == '00:00:00')
+                $todayOuttime = null;
+
 
     // <!-- 전체 데이터를 정리해서 $dataSource 배열에 저장한다.
     array_push($dataSource["desserts"], array(

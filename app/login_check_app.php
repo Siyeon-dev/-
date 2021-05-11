@@ -63,6 +63,9 @@
 	if ($out_time == '00:00:00')
 		$out_time = null;
 
+    if ($in_time == '00:00:00')
+                $in_time = null;
+
 	$outGoingDatasQuery = mysqli_query($conn, "SELECT * FROM outgo_inf WHERE idx_attendance = $userData[idx]");
     
     	$outGoingDataArray = array();

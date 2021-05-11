@@ -21,9 +21,19 @@ if (mysqli_connect_errno()) {
   $json = file_get_contents('php://input'); // JSON 포맷의 Data를 넘겨받는다.
   $decoded_json = json_decode($json, true);   // JSON 포맷을 Parsing 한다.
 
+
   // decoded 된 json 데이터에서 사용자의 id(input_user_id)와 pw(input_user_pw)를 가져온다.
   $mobileData = $decoded_json['userDevice'];      // email    - 학번
-  // 교수용 table 접근 query문 $query_pfr
+ 
+  if ($mobileData == '') {
+    $flag_mobile = false;
+    $flag_array = array("flag_mobile"=>$flag_mobile);
+    $encoded_json = json_encode($flag_array);
+    print_r($encoded_json);
+    exit();
+   } 
+
+ // 교수용 table 접근 query문 $query_pfr
   $query_mobile  = mysqli_query($conn, "SELECT * FROM student_inf WHERE mobild_device = '$mobileData'");
   $rows_mobile = mysqli_num_rows($query_mobile);
 
@@ -38,7 +48,9 @@ $query_time = mysqli_query($conn, "SELECT * FROM attendance_inf WHERE std_num = 
 $data = mysqli_fetch_assoc($query_time);
  // 프론트에게 JSON 형식으로 로그인 시도에 대한 결과값 배열 전달.
 
-
+    if ($data['in_time'] == '00:00:00') {
+     $data['in_time'] = null;
+   }
  
    if ($data['out_time'] == '00:00:00') {
      $data['out_time'] = null;
