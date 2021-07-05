@@ -93,13 +93,22 @@ if (mysqli_connect_errno()) {
   //전체 학생의 이름 리스트, 해당 학생별 1일부터 x일까지 출석 유무 데이터 확인///
   //////////////////////////////////////////////////////////////////////////
   $iCount = 0;  // 배열 인덱스 접근 변수
-  
+ $endMonthDayFlag = false; 
   if ($endMonthDay != 31) {
 	$endMonthDay += 1;
-  }  
+	$endMonthDayFlag = true;
+  }
 
-  $inMonthDay = $month . "-1" . " ";           // 해당 월의 첫번째 날
-  $outMonthDay = $month . '-' . $endMonthDay;   // 해당 월의 마지막 날
+
+ $inMonthDay = $month . "-1" . " ";           		// 해당월의 첫번째 날
+	
+	if ($endMonthDay == 31 && $endMonthDayFlag == false) {
+		$time = strtotime($inMonthDay); 
+		$month = date("Y-m",strtotime("+1 month", $time));
+		$endMonthDay = 1; 
+	}
+
+ $outMonthDay = $month . '-' . $endMonthDay;   // 해당 월의 마지막 날
 
   // <!-- 학생 날짜별 출지결 데이터를 JSON 데이터로 변환할 배열에 저장
   while ($rows = mysqli_fetch_assoc($queryAllStd)) {
